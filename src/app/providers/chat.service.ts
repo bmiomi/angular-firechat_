@@ -3,7 +3,7 @@ import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/fires
 
 import { Mensaje } from "../interface/mensaje.interface";
 
-
+import {map} from 'rxjs/operators'
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 
@@ -56,8 +56,8 @@ export class ChatService {
     this.itemsCollection = this.afs.collection<Mensaje>('chats', ref => ref.orderBy('fecha','desc')
                                                                             .limit(5) );
 
-    return this.itemsCollection.valueChanges()
-                              .map( (mensajes: Mensaje[]) =>{
+    return this.itemsCollection.valueChanges().pipe(
+                              map( (mensajes: Mensaje[]) =>{
                                 console.log( mensajes );
 
                                 this.chats = [];
@@ -67,7 +67,7 @@ export class ChatService {
                                 }
 
                                 return this.chats;
-                              })
+                              }))
 
 
   }
